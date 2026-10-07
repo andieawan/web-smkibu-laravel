@@ -6,7 +6,7 @@
     <div class="galeri galeri--penuh">
         @forelse ($galeri as $g)
             <figure>
-                <div class="galeri__foto" @if ($g->gambar) style="background-image:url('{{ Storage::url($g->gambar) }}')" @endif></div>
+                <div class="galeri__foto" @if ($g->gambar) style="background-image:url('{{ Storage::disk('public')->url($g->gambar) }}')" @endif></div>
                 <figcaption>{{ $g->judul }}<small><i class="bi bi-calendar3"></i> {{ $g->tanggal->translatedFormat('j M Y') }}</small></figcaption>
             </figure>
         @empty

@@ -27,7 +27,7 @@
                     @foreach ($f['opsi'] as $o)<option value="{{ $o }}" @selected($nilai === $o)>{{ $o }}</option>@endforeach
                 </select>
             @elseif ($f['type'] === 'image')
-                @if ($item && $item->{$nama})<img src="{{ Storage::url($item->{$nama}) }}" class="pratinjau" alt="">@endif
+                @if ($item && $item->{$nama})<img src="{{ Storage::disk('public')->url($item->{$nama}) }}" class="pratinjau" alt="">@endif
                 <input type="file" name="{{ $nama }}" accept="image/*">
             @else
                 <input type="{{ $f['type'] }}" name="{{ $nama }}" value="{{ $nilai }}">

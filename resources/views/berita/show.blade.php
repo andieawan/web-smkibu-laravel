@@ -9,7 +9,7 @@
             <span class="label label--{{ $berita->kategori === 'Prestasi' ? 'green' : 'blue' }}">{{ $berita->kategori }}</span>
         </div>
         <h1>{{ $berita->judul }}</h1>
-        @if ($berita->gambar)<img src="{{ Storage::url($berita->gambar) }}" alt="" class="baca__gambar">@endif
+        @if ($berita->gambar)<img src="{{ Storage::disk('public')->url($berita->gambar) }}" alt="" class="baca__gambar">@endif
         <div class="baca__isi">{!! nl2br(e($berita->isi)) !!}</div>
     </article>
     @if ($lainnya->isNotEmpty())

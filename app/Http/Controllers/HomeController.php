@@ -14,7 +14,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $url = fn (?string $path) => $path ? Storage::url($path) : null;
+        $url = fn (?string $path) => $path ? Storage::disk('public')->url($path) : null;
 
         return view('home', [
             'statistik' => [

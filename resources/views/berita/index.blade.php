@@ -6,7 +6,7 @@
     <div class="berita berita--grid">
         @forelse ($berita as $b)
             <article class="kartu">
-                <div class="kartu__gambar" @if ($b->gambar) style="background-image:url('{{ Storage::url($b->gambar) }}')" @endif></div>
+                <div class="kartu__gambar" @if ($b->gambar) style="background-image:url('{{ Storage::disk('public')->url($b->gambar) }}')" @endif></div>
                 <div class="kartu__isi">
                     <div class="kartu__meta">
                         <span><i class="bi bi-calendar3"></i> {{ $b->tanggal->translatedFormat('d M Y') }}</span>
