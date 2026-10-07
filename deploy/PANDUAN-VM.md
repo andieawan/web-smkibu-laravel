@@ -33,14 +33,12 @@ MariaDB, Composer, database, `.env`, migrasi, konfigurasi Nginx).
 
 ## 2. Jalankan skrip instalasi
 
-Di VM:
+Di VM (Ubuntu 26.04 memakai `sudo-rs`, jadi masuk dulu ke shell root agar variabel terbaca):
 
 ```bash
+sudo -i
 curl -fsSL https://raw.githubusercontent.com/andieawan/web-smkibu-laravel/main/deploy/install.sh -o install.sh
-sudo DOMAIN=smkibupakusari.sch.id \
-     APP_URL=https://smkibupakusari.sch.id \
-     PROXY_IP=<IP-NPMplus> \
-     bash install.sh
+DOMAIN=smkibupakusari.sch.id APP_URL=https://smkibupakusari.sch.id PROXY_IP=192.168.10.10 bash install.sh
 ```
 
 - Ganti `DOMAIN`/`APP_URL` dengan alamat yang akan dipakai website ini (kalau server menjalankan beberapa
@@ -106,7 +104,7 @@ simpan beberapa versi). Pulihkan database dengan:
 | Gejala | Periksa |
 |---|---|
 | Halaman 500 | `sudo tail -50 /var/www/web-smkibu-laravel/storage/logs/laravel.log` dan `sudo tail /var/log/nginx/error.log` |
-| 502 Bad Gateway | `systemctl status php8.3-fpm` (versi sesuai PHP terpasang) |
+| 502 Bad Gateway | `systemctl status php8.5-fpm` (Ubuntu 26.04 memakai PHP 8.5; Ubuntu 24.04 memakai 8.3) |
 | Foto/ikon tidak tampil | `APP_URL` di `.env` harus sama dengan alamat yang dibuka; `ls -l public/storage` (symlink); setelah ubah `.env` jalankan `php artisan config:cache` |
 | Unggah foto gagal (413) | batas unggah: `/etc/php/*/fpm/conf.d/99-smkibu.ini` dan `client_max_body_size` di Nginx (sudah 10 MB) |
 | Setelah login pindah ke `http://` | pastikan NPMplus meneruskan header `X-Forwarded-Proto` (bawaan aktif) dan `PROXY_IP` benar |
