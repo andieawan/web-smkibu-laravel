@@ -42,12 +42,12 @@
 
         <nav id="menu" class="menu">
             <a href="{{ route('beranda') }}" class="{{ request()->routeIs('beranda') ? 'active' : '' }}">Beranda</a>
-            <a href="{{ route('profil') }}">Profil</a>
-            <a href="{{ route('akademik') }}">Akademik</a>
-            <a href="{{ route('kesiswaan') }}">Kesiswaan</a>
-            <a href="{{ route('berita') }}">Berita</a>
-            <a href="{{ route('galeri') }}">Galeri</a>
-            <a href="{{ route('ppdb') }}">PPDB</a>
+            <a href="{{ route('profil') }}" class="{{ request()->routeIs('profil*') ? 'active' : '' }}">Profil</a>
+            <a href="{{ route('akademik') }}" class="{{ request()->routeIs('akademik*') ? 'active' : '' }}">Akademik</a>
+            <a href="{{ route('kesiswaan') }}" class="{{ request()->routeIs('kesiswaan*') ? 'active' : '' }}">Kesiswaan</a>
+            <a href="{{ route('berita') }}" class="{{ request()->routeIs('berita*') ? 'active' : '' }}">Berita</a>
+            <a href="{{ route('galeri') }}" class="{{ request()->routeIs('galeri*') ? 'active' : '' }}">Galeri</a>
+            <a href="{{ route('ppdb') }}" class="{{ request()->routeIs('ppdb*') ? 'active' : '' }}">PPDB</a>
         </nav>
 
         <div class="navbar__aksi">
