@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login Admin - SMKS Islam Bustanul Ulum</title>
-    <link href="{{ asset('css/fonts.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ \App\Support\Aset::url('css/fonts.css') }}" rel="stylesheet">
+    <link href="{{ \App\Support\Aset::url('css/admin.css') }}" rel="stylesheet">
 </head>
 <body class="login">
 <form method="POST" action="{{ route('login.proses') }}" class="login__kotak">

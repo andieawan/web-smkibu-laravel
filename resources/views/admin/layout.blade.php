@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Admin') - SMKS Islam Bustanul Ulum</title>
-    <link href="{{ asset('css/fonts.css') }}" rel="stylesheet">
+    <link href="{{ \App\Support\Aset::url('css/fonts.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
+    <link href="{{ \App\Support\Aset::url('css/admin.css') }}" rel="stylesheet">
 </head>
 <body class="admin">
 <aside class="side">

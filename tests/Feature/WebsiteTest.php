@@ -308,4 +308,10 @@ class WebsiteTest extends TestCase
         $this->actingAs($admin)->put('/admin/pengaturan', ['logo' => UploadedFile::fake()->create('x.svg', 5, 'image/svg+xml')])
             ->assertSessionHasErrors('logo');
     }
+
+    public function test_css_diberi_versi_agar_cache_ikut_diperbarui(): void
+    {
+        $this->get('/')->assertOk()->assertSee('css/site.css?v=', false);
+        $this->get('/login')->assertOk()->assertSee('css/admin.css?v=', false);
+    }
 }

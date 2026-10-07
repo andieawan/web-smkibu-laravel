@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'SMKS Islam Bustanul Ulum Pakusari - Jember')</title>
-    <link href="{{ asset('css/fonts.css') }}" rel="stylesheet">
+    <link href="{{ \App\Support\Aset::url('css/fonts.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.min.css') }}" rel="stylesheet">
     <link rel="icon" href="{{ \App\Models\Pengaturan::logoUrl() }}">
-    <link href="{{ asset('css/site.css') }}" rel="stylesheet">
+    <link href="{{ \App\Support\Aset::url('css/site.css') }}" rel="stylesheet">
 </head>
 <body>
 
