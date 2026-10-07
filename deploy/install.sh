@@ -122,7 +122,8 @@ if [ "$NEW_INSTALL" = "1" ]; then
 else
     artisan migrate --force
 fi
-[ -L public/storage ] || artisan storage:link
+# Symlink dibuat sebagai root (public/ milik root; www-data tidak boleh menulis di sana).
+ln -sfn "$APP_DIR/storage/app/public" "$APP_DIR/public/storage"
 
 info "Cache konfigurasi"
 artisan config:cache
