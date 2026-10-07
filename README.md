@@ -9,6 +9,10 @@ Node.js **tidak diperlukan** (tidak ada build frontend).
 
 ## Instalasi (VM / server)
 
+> **Cara cepat untuk VM Ubuntu/Debian:** jalankan `deploy/install.sh` (otomatis). Panduan lengkap
+> Proxmox + NPMplus + Cloudflare ada di [`deploy/PANDUAN-VM.md`](deploy/PANDUAN-VM.md).
+> Langkah manual di bawah ini untuk yang ingin memasang sendiri.
+
 ```bash
 git clone https://github.com/andieawan/web-smkibu-laravel.git
 cd web-smkibu-laravel
