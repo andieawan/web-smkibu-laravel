@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pengaturan;
+use App\Support\GambarUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -66,29 +67,41 @@ class PengaturanController extends Controller
     {
         $request->validate(array_map(fn ($d) => $d[2], $this->daftar()) + [
             'logo' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
+            'foto_kepsek' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:8192',
         ]);
 
         foreach (array_keys($this->daftar()) as $kunci) {
             Pengaturan::simpan($kunci, $request->input($kunci));
         }
 
-        $this->simpanLogo($request);
+        $this->simpanGambar($request, 'logo', 'logo', 'hapus_logo', null);
+        $this->simpanGambar($request, 'foto_kepsek', 'profil_foto_kepsek', 'hapus_foto_kepsek', 800);
 
         return back()->with('ok', 'Pengaturan situs disimpan.');
     }
 
-    /** Logo baru menggantikan yang lama; kotak "hapus" mengembalikan ke berkas bawaan. */
-    private function simpanLogo(Request $request): void
+    /**
+     * Gambar baru menggantikan yang lama; kotak "hapus" mengosongkannya.
+     * $maksPiksel: foto diperkecil bila lebih besar (null = simpan apa adanya, mis. logo transparan).
+     */
+    private function simpanGambar(Request $request, string $field, string $kunci, string $hapus, ?int $maksPiksel): void
     {
-        $lama = Pengaturan::ambil('logo');
+        $lama = Pengaturan::ambil($kunci);
 
-        if ($request->hasFile('logo')) {
-            $berkas = $request->file('logo');
-            $nama = 'konten/logo-' . Str::random(20) . '.' . $berkas->extension();
-            Storage::disk('public')->put($nama, file_get_contents($berkas->getRealPath()));
-            Pengaturan::simpan('logo', $nama);
-        } elseif ($request->boolean('hapus_logo') && $lama) {
-            Pengaturan::simpan('logo', null);
+        if ($request->hasFile($field)) {
+            $berkas = $request->file($field);
+            $isi = file_get_contents($berkas->getRealPath());
+            $ext = $berkas->extension();
+
+            if ($maksPiksel !== null && ($hasil = GambarUpload::perkecil($berkas->getRealPath(), $maksPiksel)) !== null) {
+                [$isi, $ext] = $hasil;
+            }
+
+            $nama = 'konten/' . Str::slug($field) . '-' . Str::random(20) . '.' . $ext;
+            Storage::disk('public')->put($nama, $isi);
+            Pengaturan::simpan($kunci, $nama);
+        } elseif ($request->boolean($hapus) && $lama) {
+            Pengaturan::simpan($kunci, null);
         } else {
             return;
         }

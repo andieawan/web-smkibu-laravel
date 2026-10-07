@@ -4,6 +4,7 @@
 @use('App\Models\Pengaturan', 'P')
 @php
     $kepsek = P::ambil('profil_kepsek');
+    $fotoKepsek = P::ambil('profil_foto_kepsek');
     $sambutan = P::ambil('profil_sambutan');
     $sejarah = P::ambil('profil_sejarah');
     $visi = P::ambil('profil_visi');
@@ -31,7 +32,9 @@
         <section class="blok" id="sambutan">
             <div class="sambutan">
                 <div class="sambutan__tokoh">
-                    <div class="sambutan__avatar">{{ $kepsek ? mb_strtoupper(mb_substr($kepsek, 0, 1)) : 'K' }}</div>
+                    <div class="sambutan__avatar" @if ($fotoKepsek) style="background-image:url('{{ Storage::disk('public')->url($fotoKepsek) }}')" role="img" aria-label="Foto {{ $kepsek ?: 'Kepala Sekolah' }}" @endif>
+                        @unless ($fotoKepsek){{ $kepsek ? mb_strtoupper(mb_substr($kepsek, 0, 1)) : 'K' }}@endunless
+                    </div>
                     <div>
                         @if ($kepsek)<b>{{ $kepsek }}</b>@endif
                         <small>Kepala Sekolah</small>

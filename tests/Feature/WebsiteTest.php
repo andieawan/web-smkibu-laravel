@@ -314,4 +314,25 @@ class WebsiteTest extends TestCase
         $this->get('/')->assertOk()->assertSee('css/site.css?v=', false);
         $this->get('/login')->assertOk()->assertSee('css/admin.css?v=', false);
     }
+
+    public function test_admin_bisa_mengunggah_foto_kepala_sekolah_dan_tampil_di_profil(): void
+    {
+        Storage::fake('public');
+        $admin = $this->admin();
+        Pengaturan::simpan('profil_sambutan', 'Selamat datang.');
+
+        $this->actingAs($admin)->put('/admin/pengaturan', ['foto_kepsek' => UploadedFile::fake()->image('kepsek.jpg', 2400, 1800)])
+            ->assertSessionHasNoErrors();
+        $foto = Pengaturan::ambil('profil_foto_kepsek');
+        $this->assertNotEmpty($foto);
+        Storage::disk('public')->assertExists($foto);
+        [$lebar] = getimagesizefromstring(Storage::disk('public')->get($foto));
+        $this->assertLessThanOrEqual(800, $lebar);
+
+        $this->get('/profil')->assertOk()->assertSee(basename($foto));
+
+        $this->actingAs($admin)->put('/admin/pengaturan', ['hapus_foto_kepsek' => '1'])->assertSessionHasNoErrors();
+        Storage::disk('public')->assertMissing($foto);
+        $this->assertEmpty(Pengaturan::ambil('profil_foto_kepsek'));
+    }
 }

@@ -18,6 +18,15 @@
         <label class="cek"><input type="checkbox" name="hapus_logo" value="1"> Hapus logo ini (kembali ke bawaan)</label>
     @endif
 
+    <h2 class="form__grup">Foto Kepala Sekolah (tampil di halaman Profil)</h2>
+    <label>Unggah foto (JPG/PNG/WebP, maks. 8 MB; otomatis diperkecil. Foto setengah badan, rasio persegi paling pas)
+        @if (! empty($nilai['profil_foto_kepsek']))<img src="{{ Storage::disk('public')->url($nilai['profil_foto_kepsek']) }}" class="pratinjau" alt="Foto kepala sekolah saat ini">@endif
+        <input type="file" name="foto_kepsek" accept="image/png,image/jpeg,image/webp">
+    </label>
+    @if (! empty($nilai['profil_foto_kepsek']))
+        <label class="cek"><input type="checkbox" name="hapus_foto_kepsek" value="1"> Hapus foto ini (kembali ke huruf inisial)</label>
+    @endif
+
     @foreach ($grup as $namaGrup => $daftar)
         <h2 class="form__grup">{{ $namaGrup }}</h2>
         @foreach ($daftar as $kunci => [$label, $tipe])

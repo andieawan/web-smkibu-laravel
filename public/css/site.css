@@ -305,3 +305,7 @@ a.pager__item:hover{background:#eef4fd}
 .kartu-polos .item-tgl{align-items:center}
 .kartu-polos .item-tgl p{font-size:14px;font-weight:500;line-height:1.45}
 .kartu-polos .item-tgl small{font-size:12.5px}
+
+/* Foto kepala sekolah */
+.sambutan__avatar{background-size:cover;background-position:center top}
+@media(min-width:801px){.sambutan__avatar{width:160px;height:160px;border:4px solid #fff}.sambutan{grid-template-columns:220px 1fr}}
