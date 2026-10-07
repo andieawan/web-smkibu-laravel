@@ -3,7 +3,11 @@
 @section('content')
 
 {{-- Hero --}}
-<section class="hero" style="--hero-img: url('{{ asset('images/hero.jpg') }}')">
+@php $daftarSlide = count($slides) ? $slides : [asset('images/hero.jpg')]; @endphp
+<section class="hero" data-slider>
+    @foreach ($daftarSlide as $i => $src)
+        <div class="hero__bg {{ $i === 0 ? 'on' : '' }}" style="background-image:url('{{ $src }}')"></div>
+    @endforeach
     <div class="container hero__inner">
         <div class="hero__teks">
             <span class="hero__kecil">SELAMAT DATANG DI</span>
@@ -12,8 +16,10 @@
             <a href="{{ route('profil') }}" class="btn btn--primary">Kenali Sekolah Kami <i class="bi bi-arrow-right"></i></a>
         </div>
     </div>
-    <button class="hero__nav hero__nav--kiri" aria-label="Sebelumnya"><i class="bi bi-chevron-left"></i></button>
-    <button class="hero__nav hero__nav--kanan" aria-label="Berikutnya"><i class="bi bi-chevron-right"></i></button>
+    @if (count($daftarSlide) > 1)
+        <button type="button" class="hero__nav hero__nav--kiri" aria-label="Sebelumnya"><i class="bi bi-chevron-left"></i></button>
+        <button type="button" class="hero__nav hero__nav--kanan" aria-label="Berikutnya"><i class="bi bi-chevron-right"></i></button>
+    @endif
 </section>
 
 {{-- Statistik --}}
@@ -58,7 +64,7 @@
     <aside class="panel pengumuman">
         <div class="judul-seksi">
             <h2><i class="bi bi-megaphone-fill"></i> Pengumuman</h2>
-            <a href="#" class="lihat">Lihat Semua <i class="bi bi-arrow-right"></i></a>
+            <a href="{{ route('pengumuman') }}" class="lihat">Lihat Semua <i class="bi bi-arrow-right"></i></a>
         </div>
         @foreach ($pengumuman as $p)
             <div class="item-tgl">
@@ -132,7 +138,7 @@
     <aside>
         <div class="judul-seksi">
             <h2 class="h2-kecil"><i class="bi bi-calendar-week-fill"></i> Agenda Sekolah</h2>
-            <a href="#" class="lihat">Lihat Semua <i class="bi bi-arrow-right"></i></a>
+            <a href="{{ route('agenda') }}" class="lihat">Lihat Semua <i class="bi bi-arrow-right"></i></a>
         </div>
         @foreach ($agenda as $a)
             <div class="item-tgl item-tgl--garis">
@@ -142,5 +148,27 @@
         @endforeach
     </aside>
 </section>
+
+<script>
+(function () {
+    var hero = document.querySelector('[data-slider]');
+    if (!hero) return;
+    var slide = hero.querySelectorAll('.hero__bg');
+    if (slide.length < 2) return;
+    var i = 0, timer;
+    function pindah(n) {
+        slide[i].classList.remove('on');
+        i = (n + slide.length) % slide.length;
+        slide[i].classList.add('on');
+    }
+    function otomatis() {
+        clearInterval(timer);
+        timer = setInterval(function () { pindah(i + 1); }, 6000);
+    }
+    hero.querySelector('.hero__nav--kiri').addEventListener('click', function () { pindah(i - 1); otomatis(); });
+    hero.querySelector('.hero__nav--kanan').addEventListener('click', function () { pindah(i + 1); otomatis(); });
+    otomatis();
+})();
+</script>
 
 @endsection

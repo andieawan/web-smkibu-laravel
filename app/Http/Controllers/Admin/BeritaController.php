@@ -24,7 +24,7 @@ class BeritaController extends CrudController
             'tanggal' => ['label' => 'Tanggal', 'type' => 'date', 'rules' => 'required|date'],
             'ringkas' => ['label' => 'Ringkasan (tampil di kartu beranda)', 'type' => 'textarea', 'rules' => 'required|max:400'],
             'isi' => ['label' => 'Isi berita', 'type' => 'textarea', 'rules' => 'required', 'baris' => 10],
-            'gambar' => ['label' => 'Gambar (maks. 2 MB)', 'type' => 'image'],
+            'gambar' => ['label' => 'Gambar (maks. 8 MB, otomatis diperkecil)', 'type' => 'image'],
             'terbit' => ['label' => 'Tampilkan di website', 'type' => 'bool'],
         ];
     }

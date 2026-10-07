@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'SMKS Islam Bustanul Ulum Pakusari - Jember')</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="{{ asset('css/fonts.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/site.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -20,9 +19,7 @@
             <span><i class="bi bi-envelope-fill"></i> {{ \App\Models\Pengaturan::ambil('email', 'smksibp@gmail.com') }}</span>
         </div>
         <div class="topbar__sosmed">
-            <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-            <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-            <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+            @include('partials.sosmed')
         </div>
     </div>
 </div>
@@ -44,24 +41,32 @@
 
         <nav id="menu" class="menu">
             <a href="{{ route('beranda') }}" class="{{ request()->routeIs('beranda') ? 'active' : '' }}">Beranda</a>
-            <a href="{{ route('profil') }}">Profil <i class="bi bi-chevron-down"></i></a>
-            <a href="{{ route('akademik') }}">Akademik <i class="bi bi-chevron-down"></i></a>
-            <a href="{{ route('kesiswaan') }}">Kesiswaan <i class="bi bi-chevron-down"></i></a>
-            <a href="{{ route('berita') }}">Berita <i class="bi bi-chevron-down"></i></a>
+            <a href="{{ route('profil') }}">Profil</a>
+            <a href="{{ route('akademik') }}">Akademik</a>
+            <a href="{{ route('kesiswaan') }}">Kesiswaan</a>
+            <a href="{{ route('berita') }}">Berita</a>
             <a href="{{ route('galeri') }}">Galeri</a>
             <a href="{{ route('ppdb') }}">PPDB</a>
         </nav>
 
         <div class="navbar__aksi">
-            <button class="btn-cari" aria-label="Cari"><i class="bi bi-search"></i></button>
-            @auth
+            <button type="button" class="btn-cari" aria-label="Cari berita" aria-controls="cari"
+                    onclick="var f=document.getElementById('cari');f.classList.toggle('open');if(f.classList.contains('open'))f.querySelector('input').focus()"><i class="bi bi-search"></i></button>
+            @if (auth()->user()?->is_admin)
                 <a href="{{ route('admin.dashboard') }}" class="btn btn--primary"><strong>Admin</strong> <i class="bi bi-person-fill"></i></a>
             @else
                 <a href="{{ route('login') }}" class="btn btn--primary"><strong>Login</strong> <i class="bi bi-person-fill"></i></a>
-            @endauth
+            @endif
         </div>
     </div>
 </header>
+
+<form id="cari" class="cari {{ request('q') ? 'open' : '' }}" action="{{ route('berita') }}" method="get" role="search">
+    <div class="container cari__isi">
+        <input type="search" name="q" value="{{ request('q') }}" placeholder="Cari berita..." maxlength="100" aria-label="Kata kunci">
+        <button type="submit" class="btn btn--primary">Cari</button>
+    </div>
+</form>
 
 <main>
     @yield('content')
@@ -87,7 +92,7 @@
             </div>
         </div>
         <div>
-            <h4>Kontak Kami</h4>
+            <h4 id="kontak">Kontak Kami</h4>
             <ul class="footer__kontak">
                 <li><i class="bi bi-geo-alt-fill"></i> {{ \App\Models\Pengaturan::ambil('alamat', 'Jl. Raya Pakusari No. 45, Pakusari - Jember') }}</li>
                 <li><i class="bi bi-telephone-fill"></i> {{ \App\Models\Pengaturan::ambil('telepon', '(0331) 593XXX') }}</li>
@@ -97,9 +102,7 @@
         <div>
             <h4>Ikuti Kami</h4>
             <div class="footer__sosmed">
-                <a href="#"><i class="bi bi-facebook"></i></a>
-                <a href="#"><i class="bi bi-instagram"></i></a>
-                <a href="#"><i class="bi bi-youtube"></i></a>
+                @include('partials.sosmed')
             </div>
         </div>
         <a href="{{ route('ppdb') }}" class="footer__ppdb">
@@ -111,7 +114,7 @@
     <div class="footer__bawah">
         <div class="container">
             <span>© {{ date('Y') }} SMKS Islam Bustanul Ulum Pakusari Jember. All rights reserved.</span>
-            <span class="footer__bawah-nav"><a href="{{ route('beranda') }}">Beranda</a> | <a href="{{ route('profil') }}">Profil</a> | <a href="#">Kontak</a> | <a href="#">Sitemap</a></span>
+            <span class="footer__bawah-nav"><a href="{{ route('beranda') }}">Beranda</a> | <a href="{{ route('profil') }}">Profil</a> | <a href="#kontak">Kontak</a></span>
         </div>
     </div>
 </footer>

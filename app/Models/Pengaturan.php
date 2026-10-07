@@ -19,9 +19,15 @@ class Pengaturan extends Model
         return static::$cache[$kunci] ?? $default;
     }
 
+    /** Kosongkan cache (dipakai tes dan setelah pengaturan diubah). */
+    public static function lupakan(): void
+    {
+        static::$cache = null;
+    }
+
     public static function simpan(string $kunci, ?string $nilai): void
     {
         static::updateOrCreate(['kunci' => $kunci], ['nilai' => $nilai]);
-        static::$cache = null;
+        static::lupakan();
     }
 }

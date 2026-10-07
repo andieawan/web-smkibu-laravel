@@ -20,7 +20,8 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (! Auth::attempt($kredensial, $request->boolean('ingat'))) {
+        // Hanya akun admin yang boleh masuk lewat form ini.
+        if (! Auth::attempt($kredensial + ['is_admin' => true], $request->boolean('ingat'))) {
             return back()->withErrors(['email' => 'Email atau password salah.'])->onlyInput('email');
         }
 

@@ -8,6 +8,7 @@ use App\Models\Galeri;
 use App\Models\Pengaturan;
 use App\Models\Pengumuman;
 use App\Models\ProgramKeahlian;
+use App\Models\Slide;
 use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
@@ -17,6 +18,8 @@ class HomeController extends Controller
         $url = fn (?string $path) => $path ? Storage::disk('public')->url($path) : null;
 
         return view('home', [
+            'slides' => Slide::where('aktif', true)->orderBy('urutan')->get()
+                ->map(fn ($sl) => Storage::disk('public')->url($sl->gambar))->all(),
             'statistik' => [
                 ['ikon' => 'bi-mortarboard-fill', 'judul' => 'Siswa Aktif', 'nilai' => Pengaturan::ambil('stat_siswa', '0'), 'ket' => 'Peserta didik'],
                 ['ikon' => 'bi-people-fill', 'judul' => 'Guru & Staff', 'nilai' => Pengaturan::ambil('stat_guru', '0'), 'ket' => 'Pendidik dan tenaga kependidikan'],

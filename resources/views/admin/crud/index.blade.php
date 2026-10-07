@@ -17,7 +17,9 @@
             @foreach ($kolom as $atribut)
                 @php $v = $item->{$atribut}; @endphp
                 <td>
-                    @if ($v instanceof \Carbon\Carbon) {{ $v->translatedFormat('d M Y') }}
+                    @if ($atribut === 'gambar')
+                        @if ($v)<img src="{{ Storage::disk('public')->url($v) }}" alt="" class="mini">@endif
+                    @elseif ($v instanceof \Carbon\Carbon) {{ $v->translatedFormat('d M Y') }}
                     @elseif (is_bool($v)) {{ $v ? 'Ya' : 'Tidak' }}
                     @else {{ \Illuminate\Support\Str::limit((string) $v, 70) }}
                     @endif

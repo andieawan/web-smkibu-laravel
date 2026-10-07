@@ -17,6 +17,7 @@
         @if ($nilai instanceof \Carbon\Carbon) @php $nilai = $nilai->format('Y-m-d'); @endphp @endif
 
         @if ($f['type'] === 'bool')
+            <input type="hidden" name="{{ $nama }}" value="0">
             <label class="cek"><input type="checkbox" name="{{ $nama }}" value="1" {{ old($nama, $item ? $item->{$nama} : true) ? 'checked' : '' }}> {{ $f['label'] }}</label>
         @else
             <label>{{ $f['label'] }}

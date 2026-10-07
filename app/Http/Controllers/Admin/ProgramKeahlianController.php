@@ -20,7 +20,7 @@ class ProgramKeahlianController extends CrudController
     {
         return [
             'nama' => ['label' => 'Nama program', 'type' => 'text', 'rules' => 'required|max:255'],
-            'ikon' => ['label' => 'Ikon (nama dari icons.getbootstrap.com, mis. bi-pc-display)', 'type' => 'text', 'rules' => 'required|max:50'],
+            'ikon' => ['label' => 'Ikon (nama dari icons.getbootstrap.com, mis. bi-pc-display)', 'type' => 'text', 'rules' => ['required', 'max:50', 'regex:/^bi-[a-z0-9-]+$/']],
             'urutan' => ['label' => 'Urutan tampil', 'type' => 'number', 'rules' => 'required|integer|min:0'],
         ];
     }

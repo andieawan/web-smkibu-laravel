@@ -8,6 +8,7 @@ use App\Models\Berita;
 use App\Models\Galeri;
 use App\Models\Pengumuman;
 use App\Models\ProgramKeahlian;
+use App\Models\Slide;
 
 class DashboardController extends Controller
 {
@@ -20,6 +21,7 @@ class DashboardController extends Controller
                 ['Agenda', Agenda::count(), 'admin.agenda.index', 'bi-calendar-week-fill'],
                 ['Foto Galeri', Galeri::count(), 'admin.galeri.index', 'bi-camera-fill'],
                 ['Program Keahlian', ProgramKeahlian::count(), 'admin.program.index', 'bi-mortarboard-fill'],
+                ['Banner Hero', Slide::count(), 'admin.slide.index', 'bi-images'],
             ],
         ]);
     }

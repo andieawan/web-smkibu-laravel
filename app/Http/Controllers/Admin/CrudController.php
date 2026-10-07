@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Support\GambarUpload;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * Dasar CRUD admin. Controller turunan cukup mendefinisikan
  * model, judul, rute, field form, dan kolom tabel.
  *
- * Tipe field: text, textarea, date, number, select (butuh 'opsi'), image, bool.
+ * Tipe field: text, textarea, date, number, select (butuh 'opsi'), image ('wajib' => true bila harus ada), bool.
  */
 abstract class CrudController extends Controller
 {
@@ -56,7 +59,7 @@ abstract class CrudController extends Controller
 
     public function store(Request $request)
     {
-        $item = ($this->model())::create($this->ambilData($request, null));
+        ($this->model())::create($this->ambilData($request, null));
 
         return redirect()->route('admin.' . $this->rute() . '.index')->with('ok', $this->judul() . ' berhasil ditambahkan.');
     }
@@ -91,9 +94,15 @@ abstract class CrudController extends Controller
     {
         $aturan = [];
         foreach ($this->fields() as $nama => $f) {
-            $aturan[$nama] = $f['type'] === 'image'
-                ? 'nullable|image|max:2048'
-                : ($f['rules'] ?? 'nullable');
+            if ($f['type'] === 'image') {
+                $wajib = ($f['wajib'] ?? false) && ! ($item && $item->{$nama});
+                $aturan[$nama] = ($wajib ? 'required' : 'nullable') . '|image|mimes:jpg,jpeg,png,webp,gif|max:8192';
+            } elseif ($f['type'] === 'select') {
+                // Nilai harus salah satu pilihan yang ada.
+                $aturan[$nama] = ($f['rules'] ?? 'nullable') . '|in:' . implode(',', $f['opsi']);
+            } else {
+                $aturan[$nama] = $f['rules'] ?? 'nullable';
+            }
         }
         $request->validate($aturan);
 
@@ -104,7 +113,7 @@ abstract class CrudController extends Controller
                     if ($item && $item->{$nama}) {
                         Storage::disk('public')->delete($item->{$nama});
                     }
-                    $data[$nama] = $request->file($nama)->store('konten', 'public');
+                    $data[$nama] = $this->simpanGambar($request->file($nama));
                 }
             } elseif ($f['type'] === 'bool') {
                 $data[$nama] = $request->boolean($nama);
@@ -114,5 +123,20 @@ abstract class CrudController extends Controller
         }
 
         return $this->sebelumSimpan($data, $item);
+    }
+
+    /** Simpan foto di disk public; foto besar otomatis diperkecil. */
+    private function simpanGambar(UploadedFile $berkas): string
+    {
+        $hasil = GambarUpload::perkecil($berkas->getRealPath(), (int) config('smk.foto_maks_piksel', 1600));
+        if ($hasil === null) {
+            return $berkas->store('konten', 'public');
+        }
+
+        [$isi, $ext] = $hasil;
+        $nama = 'konten/' . Str::random(40) . '.' . $ext;
+        Storage::disk('public')->put($nama, $isi);
+
+        return $nama;
     }
 }

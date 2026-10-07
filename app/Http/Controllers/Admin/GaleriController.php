@@ -21,7 +21,7 @@ class GaleriController extends CrudController
         return [
             'judul' => ['label' => 'Keterangan foto', 'type' => 'text', 'rules' => 'required|max:255'],
             'tanggal' => ['label' => 'Tanggal kegiatan', 'type' => 'date', 'rules' => 'required|date'],
-            'gambar' => ['label' => 'Foto (maks. 2 MB)', 'type' => 'image'],
+            'gambar' => ['label' => 'Foto (maks. 8 MB, otomatis diperkecil)', 'type' => 'image'],
         ];
     }
 
