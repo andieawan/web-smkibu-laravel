@@ -10,7 +10,7 @@
 <body class="login">
 <form method="POST" action="{{ route('login.proses') }}" class="login__kotak">
     @csrf
-    <img src="{{ asset('images/logo.png') }}" alt="" class="login__logo" onerror="this.style.display='none'">
+    <img src="{{ \App\Models\Pengaturan::logoUrl() }}" alt="" class="login__logo" onerror="this.style.display='none'">
     <h1>Login Admin</h1>
     <p>SMKS Islam Bustanul Ulum Pakusari</p>
     <label>Email

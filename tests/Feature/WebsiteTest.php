@@ -288,4 +288,24 @@ class WebsiteTest extends TestCase
         $this->actingAs($admin)->put('/admin/pengaturan', ['profil_sejarah' => str_repeat('a', 5001)])
             ->assertSessionHasErrors('profil_sejarah');
     }
+
+    public function test_admin_bisa_mengunggah_dan_menghapus_logo(): void
+    {
+        Storage::fake('public');
+        $admin = $this->admin();
+
+        $this->actingAs($admin)->put('/admin/pengaturan', ['logo' => UploadedFile::fake()->image('logo.png', 300, 300)])
+            ->assertSessionHasNoErrors();
+        $logo = Pengaturan::ambil('logo');
+        $this->assertNotEmpty($logo);
+        Storage::disk('public')->assertExists($logo);
+        $this->get('/')->assertSee($logo);
+
+        $this->actingAs($admin)->put('/admin/pengaturan', ['hapus_logo' => '1'])->assertSessionHasNoErrors();
+        Storage::disk('public')->assertMissing($logo);
+        $this->assertEmpty(Pengaturan::ambil('logo'));
+
+        $this->actingAs($admin)->put('/admin/pengaturan', ['logo' => UploadedFile::fake()->create('x.svg', 5, 'image/svg+xml')])
+            ->assertSessionHasErrors('logo');
+    }
 }

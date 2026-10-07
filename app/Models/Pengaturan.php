@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Pengaturan extends Model
 {
@@ -17,6 +18,14 @@ class Pengaturan extends Model
         static::$cache ??= static::pluck('nilai', 'kunci')->all();
 
         return static::$cache[$kunci] ?? $default;
+    }
+
+    /** Logo sekolah: unggahan admin, atau berkas bawaan public/images/logo.png. */
+    public static function logoUrl(): string
+    {
+        $logo = static::ambil('logo');
+
+        return $logo ? Storage::disk('public')->url($logo) : asset('images/logo.png');
     }
 
     /** Teks multibaris → daftar baris yang tidak kosong (untuk butir misi, tata tertib, dsb.). */

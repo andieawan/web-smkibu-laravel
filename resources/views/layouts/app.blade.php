@@ -6,6 +6,7 @@
     <title>@yield('title', 'SMKS Islam Bustanul Ulum Pakusari - Jember')</title>
     <link href="{{ asset('css/fonts.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/bootstrap-icons/bootstrap-icons.min.css') }}" rel="stylesheet">
+    <link rel="icon" href="{{ \App\Models\Pengaturan::logoUrl() }}">
     <link href="{{ asset('css/site.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -28,7 +29,7 @@
 <header class="navbar">
     <div class="container navbar__inner">
         <a href="{{ route('beranda') }}" class="brand">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="brand__logo" onerror="this.style.display='none'">
+            <img src="{{ \App\Models\Pengaturan::logoUrl() }}" alt="Logo" class="brand__logo" onerror="this.style.display='none'">
             <span class="brand__text">
                 <strong>SMKS ISLAM<br>BUSTANUL ULUM</strong>
                 <small>PAKUSARI - JEMBER</small>
@@ -77,7 +78,7 @@
     <div class="container footer__grid">
         <div>
             <a href="{{ route('beranda') }}" class="brand brand--light">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="brand__logo" onerror="this.style.display='none'">
+                <img src="{{ \App\Models\Pengaturan::logoUrl() }}" alt="Logo" class="brand__logo" onerror="this.style.display='none'">
                 <span class="brand__text"><strong>SMKS ISLAM<br>BUSTANUL ULUM</strong><small>PAKUSARI - JEMBER</small></span>
             </a>
             <p class="footer__desc">SMKS Islam Bustanul Ulum Jember berkomitmen mencetak lulusan yang kompeten, berakhlak mulia, dan siap kerja.</p>

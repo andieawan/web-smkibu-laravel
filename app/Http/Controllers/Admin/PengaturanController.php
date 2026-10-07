@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Pengaturan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PengaturanController extends Controller
 {
@@ -62,12 +64,37 @@ class PengaturanController extends Controller
 
     public function update(Request $request)
     {
-        $request->validate(array_map(fn ($d) => $d[2], $this->daftar()));
+        $request->validate(array_map(fn ($d) => $d[2], $this->daftar()) + [
+            'logo' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:2048',
+        ]);
 
         foreach (array_keys($this->daftar()) as $kunci) {
             Pengaturan::simpan($kunci, $request->input($kunci));
         }
 
+        $this->simpanLogo($request);
+
         return back()->with('ok', 'Pengaturan situs disimpan.');
+    }
+
+    /** Logo baru menggantikan yang lama; kotak "hapus" mengembalikan ke berkas bawaan. */
+    private function simpanLogo(Request $request): void
+    {
+        $lama = Pengaturan::ambil('logo');
+
+        if ($request->hasFile('logo')) {
+            $berkas = $request->file('logo');
+            $nama = 'konten/logo-' . Str::random(20) . '.' . $berkas->extension();
+            Storage::disk('public')->put($nama, file_get_contents($berkas->getRealPath()));
+            Pengaturan::simpan('logo', $nama);
+        } elseif ($request->boolean('hapus_logo') && $lama) {
+            Pengaturan::simpan('logo', null);
+        } else {
+            return;
+        }
+
+        if ($lama) {
+            Storage::disk('public')->delete($lama);
+        }
     }
 }
