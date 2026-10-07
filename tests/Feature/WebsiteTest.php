@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Berita;
+use App\Models\Ekstrakurikuler;
 use App\Models\Pengaturan;
 use App\Models\Slide;
+use App\Models\Staf;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\DemoSeeder;
@@ -215,5 +217,75 @@ class WebsiteTest extends TestCase
         $this->actingAs($this->admin())->post('/admin/program', [
             'nama' => 'Program Uji', 'ikon' => '"><script>', 'urutan' => 9,
         ])->assertSessionHasErrors('ikon');
+    }
+
+    // ---------- Profil, Akademik, Kesiswaan ----------
+
+    public function test_halaman_profil_menampilkan_isian_admin_dan_menyembunyikan_yang_kosong(): void
+    {
+        Pengaturan::simpan('profil_sejarah', 'Berdiri atas inisiatif masyarakat.');
+        Pengaturan::simpan('profil_misi', "Misi satu\n\nMisi dua");
+        Staf::create(['nama' => 'Budi, S.Pd.', 'jabatan' => 'Guru TKJ', 'urutan' => 1]);
+
+        $this->get('/profil')
+            ->assertOk()
+            ->assertSee('Berdiri atas inisiatif masyarakat.')
+            ->assertSee('Misi dua')
+            ->assertSee('Budi, S.Pd.')
+            ->assertSee('Mencetak Generasi Unggul')   // visi bawaan seeder
+            ->assertDontSee('NPSN');                    // belum diisi, jadi barisnya tidak tampil
+    }
+
+    public function test_teks_halaman_di_escape_dari_html(): void
+    {
+        Pengaturan::simpan('profil_sejarah', '<script>alert(1)</script>');
+
+        $this->get('/profil')->assertOk()->assertDontSee('<script>alert(1)</script>', false);
+    }
+
+    public function test_halaman_akademik_dan_kesiswaan_tampil(): void
+    {
+        $this->get('/akademik')->assertOk()->assertSee('Program Keahlian')->assertSee('Teknik Komputer dan Jaringan');
+        $this->get('/kesiswaan')->assertOk()->assertSee('Ekstrakurikuler')->assertSee('Pramuka');
+    }
+
+    public function test_admin_mengelola_ekskul_dan_staf_dan_ikon_divalidasi(): void
+    {
+        $admin = $this->admin();
+
+        $this->actingAs($admin)->post('/admin/ekstrakurikuler', [
+            'nama' => 'Futsal', 'ikon' => 'bi-trophy', 'urutan' => 5,
+        ])->assertRedirect('/admin/ekstrakurikuler');
+        $this->assertDatabaseHas('ekstrakurikuler', ['nama' => 'Futsal']);
+
+        $this->actingAs($admin)->post('/admin/ekstrakurikuler', [
+            'nama' => 'Ngawur', 'ikon' => '"><script>', 'urutan' => 5,
+        ])->assertSessionHasErrors('ikon');
+
+        $this->actingAs($admin)->post('/admin/staf', [
+            'nama' => 'Siti, S.Kom.', 'jabatan' => 'Guru RPL', 'urutan' => 2,
+        ])->assertRedirect('/admin/staf');
+        $this->assertSame(1, Staf::count());
+
+        $this->get('/kesiswaan')->assertSee('Futsal');
+        $this->get('/profil')->assertSee('Siti, S.Kom.');
+    }
+
+    public function test_halaman_konten_baru_hanya_untuk_admin(): void
+    {
+        $this->get('/admin/staf')->assertRedirect('/login');
+        $this->get('/admin/ekstrakurikuler')->assertRedirect('/login');
+    }
+
+    public function test_pengaturan_halaman_disimpan_dan_dibatasi_panjangnya(): void
+    {
+        $admin = $this->admin();
+
+        $this->actingAs($admin)->put('/admin/pengaturan', ['akademik_kurikulum' => 'Kurikulum Merdeka'])
+            ->assertSessionHasNoErrors();
+        $this->get('/akademik')->assertSee('Kurikulum Merdeka');
+
+        $this->actingAs($admin)->put('/admin/pengaturan', ['profil_sejarah' => str_repeat('a', 5001)])
+            ->assertSessionHasErrors('profil_sejarah');
     }
 }

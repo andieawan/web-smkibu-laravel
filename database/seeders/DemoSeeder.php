@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Agenda;
 use App\Models\Berita;
+use App\Models\Ekstrakurikuler;
 use App\Models\Pengaturan;
 use App\Models\Pengumuman;
 use Illuminate\Database\Seeder;
@@ -20,6 +21,24 @@ class DemoSeeder extends Seeder
     {
         foreach (['stat_siswa' => '682', 'stat_guru' => '48', 'stat_prestasi' => '120+'] as $k => $v) {
             Pengaturan::simpan($k, $v);
+        }
+
+        foreach ([
+            'profil_sambutan' => "Assalamu'alaikum warahmatullahi wabarakatuh. (Teks contoh — ganti lewat Admin > Pengaturan Situs.)",
+            'akademik_jam' => "Senin - Kamis: 07.00 - 15.00 WIB\nJumat: 07.00 - 11.30 WIB",
+            'kesiswaan_tatatertib' => "Berpakaian rapi dan sopan sesuai ketentuan sekolah\nHadir tepat waktu\nMenjaga kebersihan dan ketertiban lingkungan sekolah",
+        ] as $k => $v) {
+            Pengaturan::simpan($k, $v);
+        }
+
+        if (Ekstrakurikuler::count() === 0) {
+            foreach ([
+                ['Pramuka', 'bi-compass', 'Latihan kepramukaan dan kepemimpinan.', 'Jumat, 14.00 WIB'],
+                ['Palang Merah Remaja (PMR)', 'bi-heart-pulse', 'Pertolongan pertama dan kepedulian sosial.', 'Sabtu, 08.00 WIB'],
+                ['Hadrah / Al-Banjari', 'bi-music-note-beamed', 'Seni musik islami.', 'Kamis, 14.00 WIB'],
+            ] as $i => [$nama, $ikon, $desk, $jadwal]) {
+                Ekstrakurikuler::create(['nama' => $nama, 'ikon' => $ikon, 'deskripsi' => $desk, 'jadwal' => $jadwal, 'urutan' => $i + 1]);
+            }
         }
 
         if (Berita::count() === 0) {

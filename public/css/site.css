@@ -193,3 +193,41 @@ a.pager__item:hover{background:#eef4fd}
 /* Daftar pengumuman & agenda */
 .daftar{max-width:760px}
 .daftar .item-tgl p{font-size:15px}
+
+/* Halaman Profil, Akademik, Kesiswaan */
+.kepala-hal{background:linear-gradient(120deg,var(--biru-gelap),var(--biru));color:#fff;padding:34px 0 30px}
+.kepala-hal small{opacity:.8;font-size:12px}.kepala-hal small a:hover{text-decoration:underline}
+.kepala-hal small i{font-size:10px;margin:0 4px}
+.kepala-hal h1{font-size:28px;margin:6px 0 4px}
+.kepala-hal p{opacity:.9}
+.isi-hal{padding:30px 0 10px;display:grid;gap:28px}
+.blok h2{font-size:19px;color:var(--biru-tua);margin-bottom:12px}
+.blok h2 i,.kartu-isi h2 i{color:var(--biru);margin-right:6px}
+.blok>p{line-height:1.8;max-width:860px}
+.dua-kartu{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.kartu-isi{background:var(--bg-lembut);border-radius:12px;padding:20px}
+.kartu-isi h2{font-size:18px;color:var(--biru-tua);margin-bottom:10px}
+.kartu-isi p{line-height:1.75}
+.kartu-isi .judul-seksi h2{margin-bottom:0}
+.butir{padding-left:20px;display:grid;gap:6px;line-height:1.6}
+.butir--polos{list-style:none;padding-left:0}
+.sambutan{display:flex;gap:18px;background:var(--bg-lembut);border-radius:12px;padding:24px}
+.sambutan__ikon{font-size:44px;color:var(--biru);line-height:1}
+.sambutan p{line-height:1.8}
+.sambutan__nama{margin-top:12px;font-weight:700;color:var(--biru-tua)}
+.sambutan__nama small{display:block;font-weight:400;color:var(--abu)}
+.identitas{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.identitas div{border:1px solid var(--garis);border-radius:10px;padding:10px 14px}
+.identitas dt{font-size:12px;color:var(--abu)}.identitas dd{font-weight:600;color:var(--biru-tua)}
+.staf{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px}
+.staf__kartu{text-align:center}
+.staf__foto{width:110px;height:110px;margin:0 auto 10px;border-radius:50%;background:var(--bg-lembut) center/cover;display:grid;place-items:center;font-size:34px;font-weight:700;color:var(--biru)}
+.staf__kartu b{display:block;font-size:13px;color:var(--teks)}.staf__kartu small{color:var(--abu)}
+.program{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.program__kartu{border:1px solid var(--garis);border-radius:12px;padding:18px;background:#fff;box-shadow:0 2px 8px rgba(10,61,130,.05)}
+.program__kartu>i{font-size:28px;color:var(--biru)}
+.program__kartu h3{font-size:15px;margin:8px 0 4px;color:var(--biru-tua)}
+.program__kartu p{font-size:13px;color:var(--abu);line-height:1.6}
+.meta{list-style:none;margin-top:10px;display:grid;gap:3px;font-size:12px;color:var(--abu)}.meta i{color:var(--biru);margin-right:4px}
+.kosong-hal{color:var(--abu);padding:20px 0}
+@media(max-width:800px){.dua-kartu{grid-template-columns:1fr}.sambutan{flex-direction:column}}

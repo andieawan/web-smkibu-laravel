@@ -49,6 +49,7 @@ class DatabaseSeeder extends Seeder
             'alamat' => 'Jl. Raya Pakusari No. 45, Pakusari - Jember',
             'telepon' => '(0331) 593XXX', 'email' => 'smksibp@gmail.com',
             'sosmed_facebook' => '', 'sosmed_instagram' => '', 'sosmed_youtube' => '',
+            'profil_visi' => 'Mencetak Generasi Unggul, Berakhlak Mulia dan Siap Kerja di Era Global',
             'tentang' => 'SMKS Islam Bustanul Ulum Pakusari Jember adalah sekolah menengah kejuruan yang berlandaskan nilai-nilai Islam dan berkomitmen untuk mencetak lulusan yang kompeten, berakhlak mulia, serta siap menghadapi dunia kerja dan melanjutkan pendidikan ke jenjang yang lebih tinggi.',
         ];
         foreach ($awal as $kunci => $nilai) {

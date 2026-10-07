@@ -12,9 +12,12 @@ Route::get('/berita/{slug}', [HalamanController::class, 'beritaShow'])->name('be
 Route::get('/galeri', [HalamanController::class, 'galeri'])->name('galeri');
 Route::get('/pengumuman', [HalamanController::class, 'pengumuman'])->name('pengumuman');
 Route::get('/agenda', [HalamanController::class, 'agenda'])->name('agenda');
+Route::get('/profil', [HalamanController::class, 'profil'])->name('profil');
+Route::get('/akademik', [HalamanController::class, 'akademik'])->name('akademik');
+Route::get('/kesiswaan', [HalamanController::class, 'kesiswaan'])->name('kesiswaan');
 
 // Halaman yang belum dibuat (placeholder) agar menu tidak error.
-foreach (['profil', 'akademik', 'kesiswaan', 'ppdb'] as $halaman) {
+foreach (['ppdb'] as $halaman) {
     Route::view('/' . $halaman, 'placeholder', ['judul' => ucfirst($halaman)])->name($halaman);
 }
 
@@ -32,6 +35,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('agenda', Admin\AgendaController::class)->except('show');
     Route::resource('galeri', Admin\GaleriController::class)->except('show');
     Route::resource('program', Admin\ProgramKeahlianController::class)->except('show');
+    Route::resource('ekstrakurikuler', Admin\EkstrakurikulerController::class)->except('show');
+    Route::resource('staf', Admin\StafController::class)->except('show');
     Route::resource('slide', Admin\SlideController::class)->except('show');
 
     Route::get('pengaturan', [Admin\PengaturanController::class, 'edit'])->name('pengaturan');

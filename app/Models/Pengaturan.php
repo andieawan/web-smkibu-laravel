@@ -19,6 +19,14 @@ class Pengaturan extends Model
         return static::$cache[$kunci] ?? $default;
     }
 
+    /** Teks multibaris → daftar baris yang tidak kosong (untuk butir misi, tata tertib, dsb.). */
+    public static function baris(string $kunci): array
+    {
+        $teks = (string) static::ambil($kunci, '');
+
+        return array_values(array_filter(array_map('trim', preg_split('/\R/u', $teks) ?: []), fn ($b) => $b !== ''));
+    }
+
     /** Kosongkan cache (dipakai tes dan setelah pengaturan diubah). */
     public static function lupakan(): void
     {

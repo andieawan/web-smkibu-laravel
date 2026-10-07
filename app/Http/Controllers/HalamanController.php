@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Agenda;
 use App\Models\Berita;
+use App\Models\Ekstrakurikuler;
 use App\Models\Galeri;
 use App\Models\Pengumuman;
+use App\Models\ProgramKeahlian;
+use App\Models\Staf;
 
 /** Halaman publik yang datanya dari database. */
 class HalamanController extends Controller
@@ -51,6 +54,29 @@ class HalamanController extends Controller
     {
         return view('galeri', [
             'galeri' => Galeri::orderByDesc('tanggal')->paginate(12),
+        ]);
+    }
+
+    public function profil()
+    {
+        return view('profil', ['staf' => Staf::orderBy('urutan')->orderBy('id')->get()]);
+    }
+
+    public function akademik()
+    {
+        return view('akademik', [
+            'program' => ProgramKeahlian::orderBy('urutan')->get(),
+            'agenda' => Agenda::where('tanggal', '>=', now()->toDateString())->orderBy('tanggal')->take(5)->get(),
+            'pengumuman' => Pengumuman::where('kategori', 'Akademik')->orderByDesc('tanggal')->take(5)->get(),
+        ]);
+    }
+
+    public function kesiswaan()
+    {
+        return view('kesiswaan', [
+            'ekskul' => Ekstrakurikuler::orderBy('urutan')->orderBy('id')->get(),
+            'prestasi' => Berita::where('terbit', true)->where('kategori', 'Prestasi')->orderByDesc('tanggal')->take(4)->get(),
+            'pengumuman' => Pengumuman::where('kategori', 'Kesiswaan')->orderByDesc('tanggal')->take(5)->get(),
         ]);
     }
 }

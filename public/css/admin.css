@@ -80,3 +80,5 @@ a.pager__item:hover{background:#eef4fd}
 .pager__item--mati{color:#9aa6bd;background:#f3f6fb}
 
 .mini{height:44px;width:70px;object-fit:cover;border-radius:6px;border:1px solid var(--garis);display:block}
+.form__grup{font-size:15px;color:var(--tua);border-bottom:1px solid #e3eaf5;padding-bottom:6px;margin-top:10px}
+.form__grup:first-child{margin-top:0}

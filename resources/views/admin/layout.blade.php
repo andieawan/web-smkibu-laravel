@@ -19,6 +19,8 @@
             ['Agenda', 'admin.agenda.index', 'bi-calendar-week-fill', 'admin.agenda.*'],
             ['Galeri', 'admin.galeri.index', 'bi-camera-fill', 'admin.galeri.*'],
             ['Program Keahlian', 'admin.program.index', 'bi-mortarboard-fill', 'admin.program.*'],
+            ['Ekstrakurikuler', 'admin.ekstrakurikuler.index', 'bi-people-fill', 'admin.ekstrakurikuler.*'],
+            ['Guru & Staf', 'admin.staf.index', 'bi-person-badge-fill', 'admin.staf.*'],
             ['Banner Hero', 'admin.slide.index', 'bi-images', 'admin.slide.*'],
             ['Pengaturan Situs', 'admin.pengaturan', 'bi-gear-fill', 'admin.pengaturan*'],
         ];
