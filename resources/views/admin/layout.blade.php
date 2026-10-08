@@ -56,7 +56,7 @@
             <div><b>{{ $user->name }}</b><small>{{ $user->email }}</small></div>
         </div>
         <form method="POST" action="{{ route('logout') }}">@csrf
-            <button type="submit"><i class="bi bi-box-arrow-left"></i> Keluar</button>
+            <button type="submit" title="Keluar" aria-label="Keluar"><i class="bi bi-box-arrow-left"></i></button>
         </form>
     </div>
 </aside>
