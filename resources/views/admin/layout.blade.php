@@ -22,6 +22,8 @@
             ['Ekstrakurikuler', 'admin.ekstrakurikuler.index', 'bi-people-fill', 'admin.ekstrakurikuler.*'],
             ['Guru & Staf', 'admin.staf.index', 'bi-person-badge-fill', 'admin.staf.*'],
             ['Banner Hero', 'admin.slide.index', 'bi-images', 'admin.slide.*'],
+            ['Pengguna', 'admin.pengguna.index', 'bi-people', 'admin.pengguna.*'],
+            ['Akun Saya', 'admin.akun', 'bi-person-circle', 'admin.akun*'],
             ['Pengaturan Situs', 'admin.pengaturan', 'bi-gear-fill', 'admin.pengaturan*'],
         ];
     @endphp

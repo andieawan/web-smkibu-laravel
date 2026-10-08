@@ -27,7 +27,7 @@ Route::post('/login', [Admin\AuthController::class, 'masuk'])->middleware('throt
 Route::post('/logout', [Admin\AuthController::class, 'keluar'])->name('logout');
 
 // ---------- Panel admin ----------
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'auth.session', 'admin'])->group(function () {
     Route::get('/', [Admin\DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('berita', Admin\BeritaController::class)->except('show');
@@ -38,6 +38,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('ekstrakurikuler', Admin\EkstrakurikulerController::class)->except('show');
     Route::resource('staf', Admin\StafController::class)->except('show');
     Route::resource('slide', Admin\SlideController::class)->except('show');
+
+    Route::get('akun', [Admin\AkunController::class, 'edit'])->name('akun');
+    Route::put('akun', [Admin\AkunController::class, 'profil'])->name('akun.profil');
+    Route::put('akun/password', [Admin\AkunController::class, 'password'])->middleware('throttle:6,1')->name('akun.password');
+    Route::resource('pengguna', Admin\PenggunaController::class)->except('show');
 
     Route::get('pengaturan', [Admin\PengaturanController::class, 'edit'])->name('pengaturan');
     Route::put('pengaturan', [Admin\PengaturanController::class, 'update'])->name('pengaturan.update');

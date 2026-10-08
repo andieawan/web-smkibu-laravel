@@ -335,4 +335,74 @@ class WebsiteTest extends TestCase
         Storage::disk('public')->assertMissing($foto);
         $this->assertEmpty(Pengaturan::ambil('profil_foto_kepsek'));
     }
+
+    public function test_admin_bisa_ganti_password_sendiri(): void
+    {
+        $admin = User::factory()->admin()->create(['password' => 'lama-12345']);
+
+        $this->actingAs($admin)->get('/admin/akun')->assertOk();
+
+        $this->actingAs($admin)->put('/admin/akun/password', [
+            'password_lama' => 'salah-12345', 'password' => 'baru-12345', 'password_confirmation' => 'baru-12345',
+        ])->assertSessionHasErrors('password_lama');
+
+        $this->actingAs($admin)->put('/admin/akun/password', [
+            'password_lama' => 'lama-12345', 'password' => 'baru-12345', 'password_confirmation' => 'beda-12345',
+        ])->assertSessionHasErrors('password');
+
+        $this->actingAs($admin)->put('/admin/akun/password', [
+            'password_lama' => 'lama-12345', 'password' => 'baru-12345', 'password_confirmation' => 'baru-12345',
+        ])->assertSessionHasNoErrors();
+
+        auth()->logout();
+        $this->post('/login', ['email' => $admin->email, 'password' => 'baru-12345'])->assertRedirect();
+        $this->assertAuthenticatedAs($admin->fresh());
+    }
+
+    public function test_admin_bisa_menambah_akun_admin_lain_yang_bisa_login(): void
+    {
+        $admin = $this->admin();
+
+        $this->actingAs($admin)->get('/admin/pengguna')->assertOk();
+        $this->actingAs($admin)->post('/admin/pengguna', [
+            'name' => 'Operator Dua', 'email' => 'dua@contoh.sch.id',
+            'password' => 'rahasia-123', 'password_confirmation' => 'rahasia-123',
+        ])->assertSessionHasNoErrors();
+
+        $baru = User::where('email', 'dua@contoh.sch.id')->firstOrFail();
+        $this->assertTrue($baru->is_admin);
+
+        $this->actingAs($admin)->post('/admin/pengguna', [
+            'name' => 'Dobel', 'email' => 'dua@contoh.sch.id',
+            'password' => 'rahasia-123', 'password_confirmation' => 'rahasia-123',
+        ])->assertSessionHasErrors('email');
+
+        $this->actingAs($admin)->put("/admin/pengguna/{$baru->id}", [
+            'name' => 'Operator Dua', 'email' => 'dua@contoh.sch.id',
+            'password' => 'diganti-123', 'password_confirmation' => 'diganti-123',
+        ])->assertSessionHasNoErrors();
+
+        auth()->logout();
+        $this->post('/login', ['email' => 'dua@contoh.sch.id', 'password' => 'diganti-123'])->assertRedirect();
+        $this->assertAuthenticatedAs($baru->fresh());
+    }
+
+    public function test_admin_tidak_bisa_menghapus_akun_sendiri_tapi_bisa_menghapus_lain(): void
+    {
+        $admin = $this->admin();
+        $lain = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->delete("/admin/pengguna/{$admin->id}")->assertSessionHasErrors('hapus');
+        $this->assertDatabaseHas('users', ['id' => $admin->id]);
+
+        $this->actingAs($admin)->delete("/admin/pengguna/{$lain->id}")->assertSessionHasNoErrors();
+        $this->assertDatabaseMissing('users', ['id' => $lain->id]);
+    }
+
+    public function test_user_biasa_tidak_bisa_membuka_manajemen_pengguna(): void
+    {
+        $biasa = User::factory()->create();
+        $this->actingAs($biasa)->get('/admin/pengguna')->assertForbidden();
+        $this->actingAs($biasa)->get('/admin/akun')->assertForbidden();
+    }
 }
