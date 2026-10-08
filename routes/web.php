@@ -23,7 +23,7 @@ foreach (['ppdb'] as $halaman) {
 
 // ---------- Login / logout ----------
 Route::get('/login', [Admin\AuthController::class, 'form'])->name('login');
-Route::post('/login', [Admin\AuthController::class, 'masuk'])->middleware('throttle:6,1')->name('login.proses');
+Route::post('/login', [Admin\AuthController::class, 'masuk'])->middleware('throttle:login')->name('login.proses');
 Route::post('/logout', [Admin\AuthController::class, 'keluar'])->name('logout');
 
 // ---------- Panel admin ----------

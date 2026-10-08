@@ -405,4 +405,52 @@ class WebsiteTest extends TestCase
         $this->actingAs($biasa)->get('/admin/pengguna')->assertForbidden();
         $this->actingAs($biasa)->get('/admin/akun')->assertForbidden();
     }
+
+    public function test_dashboard_tampil_dengan_ringkasan_dan_kelengkapan(): void
+    {
+        $admin = $this->admin();
+
+        $this->actingAs($admin)->get('/admin')->assertOk()
+            ->assertSee('Kelengkapan website')
+            ->assertSee('Berita terbaru')
+            ->assertSee('js/admin.js?v=', false);
+    }
+
+    public function test_halaman_admin_memakai_csp_ketat_dan_tidak_di_cache(): void
+    {
+        $admin = $this->admin();
+
+        $respons = $this->actingAs($admin)->get('/admin/pengguna')->assertOk();
+        $this->assertStringContainsString("script-src 'self'", $respons->headers->get('Content-Security-Policy'));
+        $this->assertStringContainsString('no-store', $respons->headers->get('Cache-Control'));
+        $respons->assertDontSee('onsubmit=', false)->assertSee('data-konfirmasi', false);
+
+        $login = $this->get('/login')->assertOk();
+        $this->assertStringContainsString("script-src 'self'", $login->headers->get('Content-Security-Policy'));
+
+        $this->get('/')->assertOk()->assertHeader('Permissions-Policy');
+    }
+
+    public function test_email_berkutip_tidak_bisa_menyuntik_js_di_dialog_hapus(): void
+    {
+        $admin = $this->admin();
+        User::factory()->admin()->create(['email' => "x'y@contoh.id"]);
+
+        $html = $this->actingAs($admin)->get('/admin/pengguna')->getContent();
+        $this->assertStringNotContainsString('onsubmit', $html);
+        $this->assertStringContainsString('data-konfirmasi="Hapus akun x&#039;y@contoh.id?"', $html);
+    }
+
+    public function test_login_dibatasi_per_email_setelah_5_percobaan_gagal(): void
+    {
+        $admin = User::factory()->admin()->create(['password' => 'rahasia-123']);
+
+        for ($i = 0; $i < 5; $i++) {
+            $this->post('/login', ['email' => $admin->email, 'password' => 'salah'])->assertSessionHasErrors('email');
+        }
+        $this->post('/login', ['email' => $admin->email, 'password' => 'rahasia-123'])->assertStatus(429);
+
+        // Email lain dari IP yang sama tidak ikut terkunci.
+        $this->post('/login', ['email' => 'lain@contoh.id', 'password' => 'salah'])->assertSessionHasErrors('email');
+    }
 }
